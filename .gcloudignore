@@ -1,0 +1,39 @@
+# Virtual environments (CRITICAL - excludes directories!)
+.venv/
+venv/
+env/
+ENV/
+.env/
+
+# Environment files with secrets (SECURITY - excludes files!)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Git
+.git/
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+
+# OS
+.DS_Store
+Thumbs.db
