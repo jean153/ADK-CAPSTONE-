@@ -496,3 +496,29 @@ Copy this and paste it into the environment variable as either fitness or play a
 
 You can test using this article for fitness agent:
 https://www.researchgate.net/publication/344503648_Post-Exercise_Recovery_Strategies_in_Basketball_Practical_Applications_Based_on_Scientific_Evidence
+
+
+
+### WeatherAPI
+Create or Select a Google Cloud Project
+Go to the Google Cloud Console and create a new project (or select an existing one).
+
+Enable the Weather API
+From “APIs & Services → Library”, search for “Weather API” and enable it for your project. 
+
+Ensure billing is enabled (as required by Google Cloud when using some APIs) so that the API can function. 
+
+
+Generate Credentials (API Key or OAuth)
+
+Go to “APIs & Services → Credentials” → “Create credentials” → choose “API key” (or other credential types as appropriate). 
+Store this key securely — you’ll need it to authenticate your requests.
+
+
+### Vertex AI service account
+
+Generating a Service Account JSON Key:
+1. Create a Service Account: Navigate to "IAM & Admin" > "Service Accounts" in the Google Cloud Console and create a new service account.
+2. Assign Roles: Grant the necessary IAM roles to the service account, such as "Vertex AI User," "Vertex AI Administrator," or more specific roles depending on the required access.
+3. Create Key: In the service account details, go to the "Keys" tab, select "Add Key," and choose "Create new key." Select "JSON" as the key type.
+4. Download Key: Create the key, and a JSON file containing the service account's private key and other credentials will be downloaded to your local machine.
