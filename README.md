@@ -320,33 +320,64 @@ This is the key you will use in the code snippet below
 
 ```python
 import vertexai
-from vertexai import agent_engines
+from vertexai import agent_engines # <-- Import the correct module
+# Note: ReasoningEngine class is NOT needed for this specific use case.
 
-# ----------------------------------------------------
-# 1. Initialize Vertex AI client with your API key
-# ----------------------------------------------------
+# --- CONFIGURATION (UPDATE THESE VALUES) ---
+# Your project ID is now set correctly:
+PROJECT_ID = "YOUR_GOOGLE_CLOUD_PROJECT_ID"  # <-- Replace with your GCP project ID
+LOCATION = "YOUR_GOOGLE_CLOUD_LOCATION"  # <-- Replace with your GCP location, e.g., "us-central1"
+ENGINE_DISPLAY_NAME = "My Memory Bank Engine"
+ENGINE_DESCRIPTION = "Engine used solely for Vertex AI Memory Bank access."
+# ---------------------------------------------
+
+# --- 1. INITIALIZE VERTEX AI SDK AND CLIENT ---
+# This uses the credentials set by 'gcloud auth application-default login'
+vertexai.init(
+    project=PROJECT_ID,
+    location=LOCATION
+)
+
+# Initialize the client AFTER vertexai.init()
 client = vertexai.Client(
-    api_key="YOUR_API_KEY",
+    project=PROJECT_ID,  
+    location=LOCATION
 )
 
-# ----------------------------------------------------
-# 2. Create the Agent Engine
-# ----------------------------------------------------
-agent_engine = client.agent_engines.create(
-    config={
-        "display_name": "Demo Agent Engine",
-        "description": "Agent Engine for Session and Memory",
-    }
-)
+# --- 2. CREATE THE AGENT ENGINE FOR MEMORY BANK ---
+print(f"Creating Agent Engine (Memory Bank) '{ENGINE_DISPLAY_NAME}'...")
 
-# ----------------------------------------------------
-# 3. Extract and print the Agent Engine ID
-# ----------------------------------------------------
-AGENT_ENGINE_ID = agent_engine.api_resource.name.split("/")[-1]
+try:
+    # Use client.agent_engines.create() with the required memory_bank_config.
+    # The absence of the 'agent' argument means no agent code is deployed.
+    memory_engine = client.agent_engines.create(
+        config={
+            "display_name": ENGINE_DISPLAY_NAME,
+            "description": ENGINE_DESCRIPTION,
+            "context_spec": {
+                "memory_bank_config": {
+                    # Example config: specify the model for memory generation
+                    "generation_config": {
+                        "model": f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/gemini-2.5-flash"
+                    }
+                }
+            }
+        }
+    )
 
-print("Agent Engine Created!")
-print("Full Resource Name:", agent_engine.api_resource.name)
-print("Agent Engine ID:", AGENT_ENGINE_ID)
+    AGENT_ENGINE_ID = memory_engine.api_resource.name.split("/")[-1]
+
+    print("\n✅ Agent Engine (Memory Bank) Created Successfully!")
+    print("Full Resource Name:", memory_engine.api_resource.name)
+    print("Agent Engine ID:", AGENT_ENGINE_ID)
+    
+    # --- NEXT STEP: ACCESSING MEMORY ---
+    print("\nNext Step: You can now use this engine ID to initialize your Memory object:")
+    print(f'from vertexai.agents import Memory')
+    print(f'memory = Memory(reasoning_engine_id="{AGENT_ENGINE_ID}", session_id="my-first-session")')
+    
+except Exception as e:
+    print(f"\n❌ An error occurred during creation: {e}")
 
 ```
 
